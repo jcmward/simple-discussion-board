@@ -1,0 +1,50 @@
+All packets transmitted between client and server shall consist of a single string.  The null terminator (i.e., "\0") at the end of the string will indicate the end of a packet.  Maximum packet size (to handle the case where a null terminator is absent) will be 1500 bytes, which is the maximum transmission unit (MTU) for Ethernet.
+
+Each packet will begin with a simple header to specify the message type, which will take the form of an enumerated integer.  For now, the valid message types are defined as follows:
+10 = Post(s)
+20 = Signup
+21 = Login
+30 = Request Discussion (i.e., all topics and posts)
+31 = Request Topic
+32 = Request Author
+33 = Request Post
+40 = Return Code
+
+The string will follow a format containing some number of fields, with each field separated by the main (record) delimiter, which is a pipe ("|").  The type and number of expected fields will vary depending on the type of message.  In the case of posts, subfields (author, topic, and text) will be separated by a secondary (field) delimiter, which is the colon (":").
+
+Message type must always be specified by the first character of the packet string.  Packets with an unrecognized message type will be discarded.  The allowed types must include the following and will correspond to the identifying character given below:
+
+Below are some illustrative examples.  Spaces have been added only for readability.  The null terminator ("\0") which would conclude each packet is being omitted in these examples.
+
+POST FORMAT:
+10 | Author 1 : Topic 1 : Text of the first post | Author 2 : Topic 2 : Text of the second post | Author 3 : Topic 3 : Text of the third post
+
+SIGNUP FORMAT:
+20 | username | password
+
+LOGIN FORMAT:
+21 | username | password
+
+REQUEST DISCUSSION (i.e., all topics and posts)
+30 |
+
+REQUEST DISCUSSION TOPIC FORMAT:
+31 | Name of discussion topic
+
+REQUEST POSTS BY AUTHOR
+32 | Name of author
+
+REQUEST POST (matching a given search term)
+33 | Search term
+
+RETURN CODE FORMAT:
+40 | 404
+
+Return code (also used for error/exit codes) will be implemented as an enumerated integer with the following values and meanings:
+0 = Login success
+1 = Login failure
+2 = Signup success
+3 = Signup failure
+4 = Request discussion success
+5 = Request discussion failure
+
