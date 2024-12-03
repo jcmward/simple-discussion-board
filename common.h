@@ -1,3 +1,4 @@
+#pragma once
 /*
  * CSCN72020: Computer Networks
  * Authors: Jon Ward, Max Venables, Tanishk Sharma
@@ -38,7 +39,40 @@ class Post {
         std::string topic;
         std::string text;
     public:
-        // methods
+        // Constructors
+        Post(){
+            author = "";
+            topic = "";
+            text = "";
+        }
+        Post(std::string a, std::string b, std::string c){
+            author = a;
+            topic = b;
+            text = c;
+        }
+        // Methods
+        void setAuthor(std::string a){
+            author = a;
+        }
+        void setTopic(std::string t){
+            topic = t;
+        }
+        void setText(std::string t){
+            text = t;
+        }
+
+        std::string serialize() const {
+            return author + FIELD_DELIMITER + topic + FIELD_DELIMITER + text;
+        }
+
+        Post& operator=(const Post& other){
+            if(this != &other){
+                author = other.author;
+                topic = other.topic;
+                text = other.text;
+            }
+            return *this;
+        }
 };
 
 class Topic {
