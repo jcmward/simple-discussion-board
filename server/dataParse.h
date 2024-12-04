@@ -35,3 +35,9 @@ vector<Post> filterByAuthor(const string &filter, vector<Post>&posts);
 
 // Creates a new vector of Posts filtered by a specific keyword
 vector<Post> filterByKeyword(const string &filter, vector<Post>&posts);
+
+// Turns an input string into an Account
+Account parseAccountData(const string &data);
+
+// checks input account against existing account list
+int isValidAccount(Account &account, vector<Account>&accounts);

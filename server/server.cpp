@@ -34,10 +34,12 @@ void inputThread(){
 }
 
 int main(){
-    string filename = "posts.txt";
+    string postFile = "posts.txt";
+    string accFile = "accounts.txt";
     string returnData;
 
-    vector<Post> posts = loadPostsFromFile(filename);
+    vector<Post> posts = loadPostsFromFile(postFile);
+    vector<Account> accounts = loadAccountsFromFile(accFile);
 
     // Socket
     int ServerSocket;
@@ -111,34 +113,46 @@ int main(){
          * I wasn't sure if I should use return codes when sending info or if the client used the same codes as the server
          * So that stuff might be changed later
          */
-        vector<Post> temp;
+        vector<Post> tempPosts;
+        Account tempAcc;
         switch(dataType){
             case POSTS:
-                temp = parsePostData(remainingData);
-                posts.insert(posts.end(), temp.begin(), temp.end());
+                tempPosts = parsePostData(remainingData);
+                posts.insert(posts.end(), tempPosts.begin(), tempPosts.end());
                 returnData = POSTS + "|";
+                break;
+            case SIGNUP:
+                tempAcc = parseAccountData(remainingData);
+                accounts.push_back(tempAcc);
+                returnData = SIGNUP + "|";
+                break;
+            case LOGIN:
+                tempAcc = parseAccountData(remainingData);
+                returnData = LOGIN + "|";
+                returnData.append(to_string(isValidAccount(tempAcc, accounts)));
                 break;
             case REQUEST_DISCUSSION:
                 returnData = REQUEST_DISCUSSION + "|";
                 returnData.append(postsToString(posts));
                 break;
             case REQUEST_TOPIC:
-                temp = filterByTopic(remainingData, posts);
+                tempPosts = filterByTopic(remainingData, posts);
                 returnData = REQUEST_TOPIC + "|";
-                returnData.append(postsToString(temp));
+                returnData.append(postsToString(tempPosts));
                 break;
             case REQUEST_AUTHOR:
-                temp = filterByAuthor(remainingData, posts);
+                tempPosts = filterByAuthor(remainingData, posts);
                 returnData = REQUEST_AUTHOR + "|";
-                returnData.append(postsToString(temp));
+                returnData.append(postsToString(tempPosts));
                 break;
             case REQUEST_POST:
-                temp = filterByKeyword(remainingData, posts);
+                tempPosts = filterByKeyword(remainingData, posts);
                 returnData = REQUEST_POST + "|";
-                returnData.append(postsToString(temp));
+                returnData.append(postsToString(tempPosts));
                 break;
             default:
                 cout << "ERROR: invalid data type" << endl;
+                returnData = RETURN_CODE + "|";
                 break;
         }
         
@@ -150,7 +164,7 @@ int main(){
     }
 
     // Save posts before shutdown
-    savePoststoFile(posts, filename);
+    savePoststoFile(posts, postFile);
 
     // Cleanup
     close(ConnectionSocket);

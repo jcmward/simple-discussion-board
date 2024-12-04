@@ -90,3 +90,18 @@ vector<Post> filterByKeyword(const string &filter, vector<Post>&posts){
     }
     return filteredPosts;
 }
+
+Account parseAccountData(const string &data){
+    auto fields = splitFields(data);
+
+    return Account(fields[0], fields[1]);
+}
+
+int isValidAccount(Account &account, vector<Account>&accounts){
+    for(size_t i = 0; i < accounts.size(); i++){
+        if(account.isSame(accounts[i])){
+            return 0;
+        }
+    }
+    return 1;
+}

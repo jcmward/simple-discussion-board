@@ -30,7 +30,22 @@ class Account {
         std::string username;
         std::string password;
     public:
-        // methods
+        // Constuctors
+        Account(){
+            username = "";
+            password = "";
+        }
+        Account(std::string u, std::string p){
+            username = u;
+            password = p;
+        }
+        // Methods
+        std::string serialize() const {
+            return username + FIELD_DELIMITER + password;
+        }
+        bool isSame(const Account &acc) {
+            return this == &acc;
+        }
 };
 
 class Post {
@@ -63,15 +78,6 @@ class Post {
 
         std::string serialize() const {
             return author + FIELD_DELIMITER + topic + FIELD_DELIMITER + text;
-        }
-
-        Post& operator=(const Post& other){
-            if(this != &other){
-                author = other.author;
-                topic = other.topic;
-                text = other.text;
-            }
-            return *this;
         }
 };
 
