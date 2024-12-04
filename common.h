@@ -51,14 +51,14 @@ class Post {
             text = c;
         }
         // Methods
-        void setAuthor(std::string a){
-            author = a;
+        string getAuthor(){
+            return author;
         }
-        void setTopic(std::string t){
-            topic = t;
+        string getTopic(){
+            return topic;
         }
-        void setText(std::string t){
-            text = t;
+        string getText(){
+            return text;
         }
 
         std::string serialize() const {

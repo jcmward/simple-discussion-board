@@ -52,11 +52,41 @@ vector<Post> parsePostData(const string &data){
 
 string postsToString(vector<Post>&posts){
     string allPosts;
-    for (size_t i = 0; i < posts.size(); ++i) {
+    for (size_t i = 0; i < posts.size(); i++) {
         if (i > 0) { // Only posts after the first get a record delimiter at the beginning
             allPosts.push_back(RECORD_DELIMITER);
         }
         allPosts.append(posts[i].serialize());
     }
     return allPosts;
+}
+
+vector<Post> filterByTopic(const string &filter, vector<Post>&posts){
+    vector<Post> filteredPosts;
+    for (size_t i = 0; i < posts.size(); i++){
+        if(posts[i].getTopic() == filter){
+            filteredPosts.push_back(posts[i]);
+        }
+    }
+    return filteredPosts;
+}
+
+vector<Post> filterByAuthor(const string &filter, vector<Post>&posts){
+    vector<Post> filteredPosts;
+    for (size_t i = 0; i < posts.size(); i++){
+        if(posts[i].getAuthor() == filter){
+            filteredPosts.push_back(posts[i]);
+        }
+    }
+    return filteredPosts;
+}
+
+vector<Post> filterByKeyword(const string &filter, vector<Post>&posts){
+    vector<Post> filteredPosts;
+    for (size_t i = 0; i < posts.size(); i++){
+        if(posts[i].getText().find(filter) != -1){
+            filteredPosts.push_back(posts[i]);
+        }
+    }
+    return filteredPosts;
 }

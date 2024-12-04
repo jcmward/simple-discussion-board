@@ -24,3 +24,14 @@ vector<Post> parsePostData(const string &data);
 
 // Converts a vector of Posts into a string
 string postsToString(vector<Post>&posts);
+
+// TODO: figure out how to combine all the "filterBy" functions, if possible
+
+// Creates a new vector of Posts filtered by a specific topic
+vector<Post> filterByTopic(const string &filter, vector<Post>&posts);
+
+// Creates a new vector of Posts filtered by a specific author
+vector<Post> filterByAuthor(const string &filter, vector<Post>&posts);
+
+// Creates a new vector of Posts filtered by a specific keyword
+vector<Post> filterByKeyword(const string &filter, vector<Post>&posts);
