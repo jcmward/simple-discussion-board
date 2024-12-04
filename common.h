@@ -25,6 +25,14 @@ typedef enum message_type {
     RETURN_CODE         = 40,
 } MESSAGE_TYPE;
 
+typedef enum return_type {
+    LOGIN_SUCCESS       = 0,
+    LOGIN_FAILURE       = 1,
+    SIGNUP_SUCCESS      = 2,
+    SIGNUP_FAILURE      = 3,
+    INVALID_MSG         = 4,
+} RETURN_TYPE;
+
 class Account {
     private:
         std::string username;

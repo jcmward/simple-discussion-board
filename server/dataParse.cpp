@@ -100,8 +100,8 @@ Account parseAccountData(const string &data){
 int isValidAccount(Account &account, vector<Account>&accounts){
     for(size_t i = 0; i < accounts.size(); i++){
         if(account.isSame(accounts[i])){
-            return 0;
+            return LOGIN_SUCCESS;
         }
     }
-    return 1;
+    return LOGIN_FAILURE;
 }

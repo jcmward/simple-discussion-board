@@ -109,50 +109,48 @@ int main(){
 
         cout << "Recieved data of type: " << dataType << endl;
 
-        /* 
-         * I wasn't sure if I should use return codes when sending info or if the client used the same codes as the server
-         * So that stuff might be changed later
-         */
         vector<Post> tempPosts;
         Account tempAcc;
         switch(dataType){
             case POSTS:
                 tempPosts = parsePostData(remainingData);
                 posts.insert(posts.end(), tempPosts.begin(), tempPosts.end());
-                returnData = POSTS + "|";
+                returnData = RETURN_CODE + RECORD_DELIMITER;
                 break;
             case SIGNUP:
                 tempAcc = parseAccountData(remainingData);
                 accounts.push_back(tempAcc);
-                returnData = SIGNUP + "|";
+                returnData = RETURN_CODE + RECORD_DELIMITER + SIGNUP_SUCCESS;
                 break;
             case LOGIN:
                 tempAcc = parseAccountData(remainingData);
-                returnData = LOGIN + "|";
+                returnData = RETURN_CODE + RECORD_DELIMITER;
                 returnData.append(to_string(isValidAccount(tempAcc, accounts)));
                 break;
             case REQUEST_DISCUSSION:
-                returnData = REQUEST_DISCUSSION + "|";
+                returnData = POSTS + RECORD_DELIMITER;
                 returnData.append(postsToString(posts));
                 break;
             case REQUEST_TOPIC:
                 tempPosts = filterByTopic(remainingData, posts);
-                returnData = REQUEST_TOPIC + "|";
+                returnData = POSTS + RECORD_DELIMITER;
                 returnData.append(postsToString(tempPosts));
                 break;
             case REQUEST_AUTHOR:
                 tempPosts = filterByAuthor(remainingData, posts);
-                returnData = REQUEST_AUTHOR + "|";
+                returnData = POSTS + RECORD_DELIMITER;
                 returnData.append(postsToString(tempPosts));
                 break;
             case REQUEST_POST:
                 tempPosts = filterByKeyword(remainingData, posts);
-                returnData = REQUEST_POST + "|";
+                returnData = POSTS + RECORD_DELIMITER;
                 returnData.append(postsToString(tempPosts));
+                break;
+            case RETURN_CODE: // unsure if this will be needed
                 break;
             default:
                 cout << "ERROR: invalid data type" << endl;
-                returnData = RETURN_CODE + "|";
+                returnData = RETURN_CODE + RECORD_DELIMITER + INVALID_MSG;
                 break;
         }
         
@@ -163,8 +161,9 @@ int main(){
         }
     }
 
-    // Save posts before shutdown
+    // Save posts and accounts before shutdown
     savePoststoFile(posts, postFile);
+    saveAccountstoFile(accounts, accFile);
 
     // Cleanup
     close(ConnectionSocket);
