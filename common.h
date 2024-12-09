@@ -5,6 +5,9 @@
  * Common header file for client and server
  */
 
+#ifndef COMMON_H
+#define COMMON_H
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -141,4 +144,6 @@ private:
 public:
     // methods
 };
+
+#endif
 
