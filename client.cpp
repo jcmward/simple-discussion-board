@@ -31,16 +31,6 @@
 /*     } */
 /* } */
 
-std::vector<std::string> split(const std::string& str, char delimiter) {
-    std::vector<std::string> tokens;
-    std::stringstream ss(str);
-    std::string item;
-    while (std::getline(ss, item, delimiter)) {
-        tokens.push_back(item);
-    }
-    return tokens;
-}
-
 Post input_post() {
     std::string author, topic, text;
     std::cout << "Please provide the following details.  Author and topic can be left blank for an anonymous/generic post." << std::endl;
@@ -72,7 +62,7 @@ void send_post(Post post, int socket) {
     serialized_post += FIELD_DELIMITER;
     serialized_post += post.get_text();
 
-    send(socket, serialized_post.c_str(), serialized_post.size(), 0);
+    send_data(socket, serialized_post);
 }
 
 void send_multiple_posts(int socket) {
@@ -102,7 +92,8 @@ void send_multiple_posts(int socket) {
     serialized_posts += RECORD_DELIMITER + oss.str();
 
     // Send serialized posts to server
-    send(socket, serialized_posts.c_str(), serialized_posts.size(), 0);
+    std::cout << "Sending data: " << std::endl << serialized_posts << std::endl;
+    send_data(socket, serialized_posts);
 }
 
 void receive_posts(int socket) {
@@ -126,7 +117,8 @@ void receive_posts(int socket) {
 
 void request_posts(int socket) {
     std::string message = std::to_string(static_cast<int>(REQUEST_DISCUSSION));
-    send(socket, message.c_str(), message.size(), 0);
+    std::cout << "Sending data: " << std::endl << message << std::endl;
+    send_data(socket, message);
 
     receive_posts(socket);
 }
@@ -140,7 +132,8 @@ void search_posts_by_author(int socket) {
     // Serialize and send
     std::string message = std::to_string(static_cast<int>(REQUEST_AUTHOR));
     message += RECORD_DELIMITER + search_term;
-    send(socket, message.c_str(), message.size(), 0);
+    std::cout << "Sending data: " << std::endl << message << std::endl;
+    send_data(socket, message);
 
     receive_posts(socket);
 }
@@ -154,7 +147,8 @@ void search_posts_by_topic(int socket) {
     // Serialize and send
     std::string message = std::to_string(static_cast<int>(REQUEST_TOPIC));
     message += RECORD_DELIMITER + search_term;
-    send(socket, message.c_str(), message.size(), 0);
+    std::cout << "Sending data: " << std::endl << message << std::endl;
+    send_data(socket, message);
 
     receive_posts(socket);
 }
@@ -173,7 +167,8 @@ void login(int socket) {
     message += username;
     message += FIELD_DELIMITER;
     message += password;
-    send(socket, message.c_str(), message.size(), 0);
+    std::cout << "Sending data: " << std::endl << message << std::endl;
+    send_data(socket, message);
 
     char response[MAX_PACKET] = {0};
     int bytes_read = recv(socket, response, sizeof(response), 0);
@@ -200,7 +195,8 @@ void signup(int socket) {
     message += username;
     message += FIELD_DELIMITER;
     message += password;
-    send(socket, message.c_str(), message.size(), 0);
+    std::cout << "Sending data: " << std::endl << message << std::endl;
+    send_data(socket, message);
 
     char response[MAX_PACKET] = {0};
     int bytes_read = recv(socket, response, sizeof(response), 0);
@@ -269,22 +265,11 @@ bool run_menu(int socket) {
     return true;    // Re-run the menu
 }
 
-int main () {
+int main() {
     int client_socket = connect_socket(SERVER_ADDRESS, SERVER_PORT);
     if (client_socket == -1) {
         exit(EXIT_FAILURE);
     }
-
-    // Something like this
-    const char* packet = "";
-    int bytes_sent = send(client_socket, packet, MAX_PACKET, 0);
-    if (bytes_sent < 0) {
-        std::cerr << "ERROR: Failed to send data" << std::endl;
-    } else {
-        std::cout << "Sent: " << packet << std::endl;
-    }
-
-    /* std::vector<Post>* posts = { 0 }; */
 
     while (run_menu(client_socket)) {
         ;   // Nothing else needed here

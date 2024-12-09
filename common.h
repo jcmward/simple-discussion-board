@@ -5,6 +5,8 @@
  * Common header file for client and server
  */
 
+#include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -115,7 +117,7 @@ public:
     bool deserialize(const std::string& data) {
         std::vector<std::string> fields = split(data, FIELD_DELIMITER);
         if (fields.size() != 3) {
-            return false
+            return false;
         }
         author = fields[0];
         topic = fields[1];
