@@ -12,9 +12,6 @@
 #include "common.h"
 #include "socket_utils.h"
 
-#define SERVER_ADDRESS  "127.0.0.1"
-#define SERVER_PORT     27500
-
 /* void handle_message(int msg_type) { */
 /*     switch(msg_type) { */
 /*         case RETURN_CODE: */

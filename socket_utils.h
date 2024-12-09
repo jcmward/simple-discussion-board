@@ -4,7 +4,7 @@
 
 int connect_socket(const char* server_address, const unsigned short server_port);
 
-void send_data(int socket, std::string data);
+void send_data(int socket, const std::string &data);
 
 void close_socket(int socket);
 
